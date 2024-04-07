@@ -7,4 +7,10 @@ data class AgendamentoResponse(
     var hora: String? = null,
     var cliente: String? = null,
     var pet: String? = null
-)
+){
+    companion object{
+        fun criarResponse(request: Agendamento): AgendamentoResponse {
+            return AgendamentoResponse(request.data, request.hora, request.cliente, request.pet)
+        }
+    }
+}
