@@ -2,41 +2,38 @@ package com.estudo.clinica_veterinaria.agendamento.controller
 
 import com.estudo.clinica_veterinaria.agendamento.domain.repository.AgendamentoRepository
 import com.estudo.clinica_veterinaria.agendamento.domain.request.Agendamento
+import com.estudo.clinica_veterinaria.agendamento.domain.response.AgendamentoResponse
+import com.estudo.clinica_veterinaria.agendamento.service.CriarAgendamentoService
+import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
-import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.ResponseStatus
 import org.springframework.web.bind.annotation.RestController
-import org.springframework.web.util.UriComponentsBuilder
-import java.net.URI
 import java.util.*
 
 @RestController
 @RequestMapping("/clinicavet", MediaType.APPLICATION_JSON_VALUE)
-class AgendamentoController(private var repository: AgendamentoRepository) {
+class AgendamentoController(private val criarAgendamentoService: CriarAgendamentoService, private val repository: AgendamentoRepository) {
 
     @PostMapping("/agendamentos")
-    fun criarAgendamento(@RequestBody request: Agendamento, uriBuilder: UriComponentsBuilder): ResponseEntity<Agendamento> {
-
-        repository.save(request)
-
-        val uri: URI = uriBuilder.path("/agendamentos/{id}").buildAndExpand(request.id).toUri()
-
-        return ResponseEntity.created(uri).body(request)
-
+    @ResponseStatus(HttpStatus.CREATED)
+    fun criarAgendamento(@RequestBody request: Agendamento): AgendamentoResponse {
+        return criarAgendamentoService.criarAgendamento(request)
     }
 
-    @GetMapping("/{id}")
-    fun buscarAgendamento(@PathVariable id: Long): ResponseEntity<Optional<Agendamento>> {
+    @GetMapping("/agendamentos/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    fun buscarAgendamento(@PathVariable id: Long): Any {
         val agendamento: Optional<Agendamento> = repository.findById(id)
 
         if (agendamento.isPresent){
-            return ResponseEntity.ok(agendamento)
+            return agendamento
         }
-        return ResponseEntity.notFound().build()
+        return HttpStatus.NOT_FOUND
 
     }
 }
