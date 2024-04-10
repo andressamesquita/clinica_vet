@@ -17,7 +17,10 @@ import java.util.*
 
 @RestController
 @RequestMapping("/clinicavet", MediaType.APPLICATION_JSON_VALUE)
-class AgendamentoController(private val criarAgendamentoService: CriarAgendamentoService, private val repository: AgendamentoRepository) {
+class AgendamentoController(
+    private val criarAgendamentoService: CriarAgendamentoService,
+    private val repository: AgendamentoRepository
+) {
 
     @PostMapping("/agendamentos")
     @ResponseStatus(HttpStatus.CREATED)
@@ -34,6 +37,5 @@ class AgendamentoController(private val criarAgendamentoService: CriarAgendament
             return agendamento
         }
         return HttpStatus.NOT_FOUND
-
     }
 }

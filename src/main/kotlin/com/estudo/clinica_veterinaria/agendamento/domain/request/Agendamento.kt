@@ -1,9 +1,8 @@
 package com.estudo.clinica_veterinaria.agendamento.domain.request
 
-import jakarta.persistence.Entity
-import jakarta.persistence.GeneratedValue
-import jakarta.persistence.GenerationType
-import jakarta.persistence.Id
+import com.estudo.clinica_veterinaria.cliente.domain.request.Cliente
+import com.estudo.clinica_veterinaria.pet.domain.request.Pet
+import jakarta.persistence.*
 
 @Entity
 class Agendamento {
@@ -13,7 +12,13 @@ class Agendamento {
     val id: Long? = null;
     var data: String? = null;
     var hora: String? = null;
-    var cliente: String? = null;
-    var pet: String? = null
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "cliente_id")
+    var cliente: Cliente? = null;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "pet_id")
+    var pet: Pet? = null
 
 }
